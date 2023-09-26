@@ -2,13 +2,19 @@
 
 namespace App\Controller;
 
+use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use function Symfony\Component\String\u;
 
 class VinylController extends AbstractController
 {
+    private const MIXES_URL = 'https://raw.githubusercontent.com/SymfonyCasts/vinyl-mixes/main/mixes.json';
+
     #[Route('/', name: 'app_homepage')]
     public function homepage(): Response
     {
@@ -28,39 +34,19 @@ class VinylController extends AbstractController
     }
 
     #[Route('/browse/{slug}', name: 'app_browse')]
-    public function browse(string $slug = null): Response
+    public function browse(HttpClientInterface $httpClient, CacheInterface $cache, string $slug = null): Response
     {
+        dump($cache);
         $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
-        $mixes = $this->getMixes();
+        $mixes = $cache->get('mixes.github', function(CacheItemInterface $cacheItem) use($httpClient) {
+            $cacheItem->expiresAfter(5);
+
+            return $httpClient->request(Request::METHOD_GET, self::MIXES_URL)->toArray();
+        });
 
         return $this->render('vinyl/browse.html.twig', [
             'genre' => $genre,
             'mixes' => $mixes,
         ]);
-    }
-
-    private function getMixes(): array
-    {
-        // temporary fake "mixes" data
-        return [
-            [
-                'title' => 'PB & Jams',
-                'trackCount' => 14,
-                'genre' => 'Rock',
-                'createdAt' => new \DateTime('2021-10-02'),
-            ],
-            [
-                'title' => 'Put a Hex on your Ex',
-                'trackCount' => 8,
-                'genre' => 'Heavy Metal',
-                'createdAt' => new \DateTime('2022-04-28'),
-            ],
-            [
-                'title' => 'Spice Grills - Summer Tunes',
-                'trackCount' => 10,
-                'genre' => 'Pop',
-                'createdAt' => new \DateTime('2019-06-20'),
-            ],
-        ];
     }
 }
