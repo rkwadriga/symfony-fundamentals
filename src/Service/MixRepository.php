@@ -7,6 +7,7 @@
 namespace App\Service;
 
 use Psr\Cache\CacheItemInterface;
+use Symfony\Bridge\Twig\Command\DebugCommand;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -19,6 +20,8 @@ class MixRepository
     public function __construct(
         private readonly HttpClientInterface $githubContentClient,
         private readonly CacheInterface $cache,
+        #[Autowire(service: 'twig.command.debug')]
+        private readonly DebugCommand $debugCommand,
         #[Autowire('%cache.lifetime%')]
         private readonly int $lifetime
     ) {

@@ -26,4 +26,5 @@ services:
 
 #    App\Service\MixRepository:
 #        bind:
+#            $debugCommand: '@twig.command.debug'
 #            $lifetime: '%cache.lifetime%'
