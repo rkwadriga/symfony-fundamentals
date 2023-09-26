@@ -1,5 +1,17 @@
+parameters:
+    cache_adapter: cache.adapter.filesystem
+
+when@dev:
+    parameters:
+        cache_adapter: cache.adapter.array
+
+when@pp:
+    parameters:
+        cache_adapter: cache.adapter.redis
+
 framework:
     cache:
+        app: '%cache_adapter%'
         # Unique name of your app: used to compute stable namespaces for cache keys.
         #prefix_seed: your_vendor_name/app_name
 
@@ -17,3 +29,4 @@ framework:
         # Namespaced pools use the above "app" backend by default
         #pools:
             #my.dedicated.cache: null
+
