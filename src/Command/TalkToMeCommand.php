@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Service\MixRepository;
+use App\Repository\VinylMixRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class TalkToMeCommand extends Command
 {
     public function __construct(
-        private readonly MixRepository $mixRepository,
+        private readonly VinylMixRepository $mixRepository,
         string $name = null
     ) {
         parent::__construct($name);
@@ -49,7 +49,7 @@ class TalkToMeCommand extends Command
             $mixes = $this->mixRepository->findAll();
             $mix = $mixes[array_rand($mixes)];
 
-            $io->note(sprintf('I recommend the mix: %s', $mix['title']));
+            $io->note(sprintf('I recommend the mix: %s', $mix->getTitle()));
         }
 
         return Command::SUCCESS;
