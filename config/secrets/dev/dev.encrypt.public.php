@@ -1,0 +1,3 @@
+<?php // dev.encrypt.public on Tue, 26 Sep 2023 10:23:49 +0000
+
+return "\x1E\x87e\x14\xD9I8MIU8\xAE\xEA\xB8k7N\xC2\x24\x8E\xB3A\x9F\x97\xB7s\xB3wE\xD6\xA88";
