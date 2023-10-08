@@ -21,16 +21,18 @@ class MixController extends AbstractController
     #[Route('/mix/new', name: 'app_mix_new')]
     public function new(EntityManagerInterface $em): Response
     {
-        $mix = new VinylMix();
-        $mix
-            ->setTitle('Mix 7')
-            ->setDescription('Mix 7 Description')
-            ->setGenre('pop')
-            ->setTrackCount(rand(5, 20))
-            ->setVotes(rand(-50, 50))
-        ;
+        for ($i = 1; $i <= 7; $i++) {
+            $mix = new VinylMix();
+            $mix
+                ->setTitle("Mix {$i}")
+                ->setDescription("Mix {$i} Description")
+                ->setGenre('pop')
+                ->setTrackCount(rand(5, 20))
+                ->setVotes(rand(-50, 50))
+            ;
+            $em->persist($mix);
+        }
 
-        $em->persist($mix);
         $em->flush();
 
         return new Response(sprintf(
