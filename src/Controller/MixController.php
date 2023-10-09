@@ -41,30 +41,4 @@ class MixController extends AbstractController
 
         return $this->redirectToRoute('app_mix_show', ['id' => $mix->getId()]);
     }
-
-    #[Route('/mix/new', name: 'app_mix_new')]
-    public function new(EntityManagerInterface $em): Response
-    {
-        $genres = ['pop', 'rock'];
-
-        for ($i = 1; $i <= 17; $i++) {
-            $mix = new VinylMix();
-            $mix
-                ->setTitle("Mix {$i}")
-                ->setDescription("Mix {$i} Description")
-                ->setGenre($genres[array_rand($genres)])
-                ->setTrackCount(rand(5, 20))
-                ->setVotes(rand(-50, 50))
-            ;
-            $em->persist($mix);
-        }
-
-        $em->flush();
-
-        return new Response(sprintf(
-            'New mix #%d with %d tracks created',
-            $mix->getId(),
-            $mix->getTrackCount()
-        ));
-    }
 }
