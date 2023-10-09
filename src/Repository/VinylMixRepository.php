@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\VinylMix;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -25,13 +26,19 @@ class VinylMixRepository extends ServiceEntityRepository
     /**
      * @return array<VinylMix>
      */
-    public function findAllOrderedByVotes(): array
+    public function findAllOrderedByVotesFilteredByGenre(string $genre = null): array
     {
-        return $this->createQueryBuilder('mix')
-            ->orderBy('mix.votes', Criteria::DESC)
-            ->getQuery()
-            ->getResult()
-        ;
+        $queryBuilder = $this->addOrderByVotesQueryBuilder();
+        if ($genre !== null) {
+            $queryBuilder->where('mix.genre = :genre')->setParameter('genre', $genre);
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    private function addOrderByVotesQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return ($queryBuilder ?? $this->createQueryBuilder('mix'))->orderBy('mix.votes', Criteria::DESC);
     }
 
 //    public function findOneBySomeField($value): ?VinylMix

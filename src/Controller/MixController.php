@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\VinylMix;
+use App\Repository\VinylMixRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,12 +19,22 @@ class MixController extends AbstractController
         ]);
     }
 
+    #[Route('/mix/{id<\d+>}', name: 'app_mix_show')]
+    public function show(VinylMixRepository $mxRepository, int $id): Response
+    {
+        $mix = $mxRepository->find($id);
+
+        return $this->render('mix/show.html.twig', [
+            'mix' => $mix,
+        ]);
+    }
+
     #[Route('/mix/new', name: 'app_mix_new')]
     public function new(EntityManagerInterface $em): Response
     {
         $genres = ['pop', 'rock'];
 
-        for ($i = 1; $i <= 7; $i++) {
+        for ($i = 1; $i <= 17; $i++) {
             $mix = new VinylMix();
             $mix
                 ->setTitle("Mix {$i}")
