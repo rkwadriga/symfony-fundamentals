@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\VinylMix;
-use App\Repository\VinylMixRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,13 +19,8 @@ class MixController extends AbstractController
     }
 
     #[Route('/mix/{id<\d+>}', name: 'app_mix_show')]
-    public function show(VinylMixRepository $mxRepository, int $id): Response
+    public function show(VinylMix $mix): Response
     {
-        $mix = $mxRepository->find($id);
-        if ($mix === null) {
-            throw $this->createNotFoundException(sprintf('Mix #%d not found', $id));
-        }
-
         return $this->render('mix/show.html.twig', [
             'mix' => $mix,
         ]);
