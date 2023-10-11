@@ -26,24 +26,26 @@
     <div>
         <h2 class="mt-5">Mixes</h2>
         <div class="row">
-            {% for mix in mixes %}
-            <div class="col col-md-4">
-                <a
-                    href="{{ path('app_mix_show', {slug: mix.slug}) }}"
-                    class="mixed-vinyl-container p-3 text-center"
-                >
-                    <img src="{{ mix.imageUrl(300) }}" data-src="{{ mix.imageUrl(300) }}" alt="Square placeholder img">
-                    <p class="mt-2"><strong>{{ mix.title }}</strong></p>
-                    <span>{{ mix.trackCount }} Tracks</span>
-                    |
-                    <span>{{ mix.genre }}</span>
-                    |
-                    <span>{{ mix.createdAt | ago }}</span>
-                    |
-                    <span>{{ mix.votesString }}</span>
-                </a>
-            </div>
+            {% for mix in pager %}
+                <div class="col col-md-4">
+                    <a
+                        href="{{ path('app_mix_show', {slug: mix.slug}) }}"
+                        class="mixed-vinyl-container p-3 text-center"
+                    >
+                        <img src="{{ mix.imageUrl(300) }}" data-src="{{ mix.imageUrl(300) }}" alt="Square placeholder img">
+                        <p class="mt-2"><strong>{{ mix.title }}</strong></p>
+                        <span>{{ mix.trackCount }} Tracks</span>
+                        |
+                        <span>{{ mix.genre }}</span>
+                        |
+                        <span>{{ mix.createdAt | ago }}</span>
+                        |
+                        <span>{{ mix.votesString }}</span>
+                    </a>
+                </div>
             {% endfor %}
+
+            {{ pagerfanta(pager) }}
         </div>
     </div>
 </div>
